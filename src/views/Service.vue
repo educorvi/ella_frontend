@@ -26,6 +26,8 @@ export default {
           return () => import(/* webpackChunkName: "Form" */ "../components/Services/Form");
         case 'group':
           return () => import(/* webpackChunkName: "Group" */ "../components/Services/Group");
+        case 'audio':
+          return () => import(/* webpackChunkName: "Group" */ "../components/Services/Audio");
         default:
           return () => import(/* webpackChunkName: "notFound" */ "./notFound");
       }
