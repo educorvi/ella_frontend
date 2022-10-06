@@ -62,6 +62,10 @@ body {
 
 .clickable {
   cursor: pointer;
+
+  &:focus{
+    outline: $primary solid 2px;
+  }
 }
 
 @import "~@/theme/theme";
