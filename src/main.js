@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import {CardPlugin, SidebarPlugin, ButtonPlugin, JumbotronPlugin, SpinnerPlugin, NavbarPlugin, BootstrapVue, BIconX, BIconJustify} from 'bootstrap-vue'
+import {CardPlugin, SidebarPlugin, ButtonPlugin, JumbotronPlugin, SpinnerPlugin, NavbarPlugin, BootstrapVue, BIconX, BIconJustify, BIconPlayCircle, BIconPauseCircle} from 'bootstrap-vue'
 import './styles.scss'
 
 // Vue.use(BootstrapVue);
@@ -14,6 +14,8 @@ Vue.use(ButtonPlugin);
 Vue.use(BootstrapVue);
 Vue.component("BIconX", BIconX);
 Vue.component("BIconJustify", BIconJustify);
+Vue.component("BIconPlayCircle", BIconPlayCircle);
+Vue.component("BIconPauseCircle", BIconPauseCircle);
 
 import Vue2TouchEvents from "vue2-touch-events";
 Vue.use(Vue2TouchEvents);

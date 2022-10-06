@@ -97,10 +97,6 @@ export default {
     border-radius: $border-radius;
   }
 
-  //@extend .pt-2;
-  //@extend .pb-2;
-  //@extend .pl-2;
-  //@extend .pr-2;
   @extend .p-2;
 
   &.active {
