@@ -97,6 +97,7 @@ wave {
 </style>
 
 <style lang="scss" scoped>
+@import "src/styles";
 
 
 .audiocontrols {
@@ -151,7 +152,13 @@ wave {
   border: 1px solid #000000;
   height: 70px;
   width: 16px;
-  border-radius: 3px;
+  @if($enable-rounded){
+    border-radius: $border-radius;
+  }
+  @else{
+    border-radius: 0;
+  }
+
   background: #ffffff;
   cursor: pointer;
 }
