@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div id="head">
+    <div id="head" class="mb-3">
       <h2 class="mt-3">{{ service.title }}</h2>
-      <p class="text-muted">{{ service.description }}</p>
+<!--      <b-checkbox>Untertitel anzeigen</b-checkbox>-->
+      <p class="text-muted m-0">{{ service.description }}</p>
     </div>
     <span v-html="service.media.textbefore"/>
     <div v-for="(song, index) in service.media.mediafiles" :key="index+'_'+song.name">

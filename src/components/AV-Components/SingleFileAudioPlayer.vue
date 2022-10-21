@@ -15,13 +15,17 @@
           </div>
           <div class="layer2">
             <div id="wf_container">
-              <div id="waveform" style="height: 80px"></div>
+              <div :id="'waveform_'+player_id" style="height: 80px"></div>
             </div>
           </div>
         </div>
         <b-progress :value="loaded" :max="100" animated v-if="loaded < 100"></b-progress>
       </div>
     </div>
+    <b-collapse class="audio_subtitle" :visible="!!current_subtitle">
+      <hr>
+      <p>{{current_subtitle?.subtitle}}</p>
+    </b-collapse>
   </div>
 </template>
 
@@ -42,12 +46,34 @@ export default {
       ready: false,
       loaded: 0,
       wavesurfer: null,
-      player_id: 'player_' + (Math.random() + 1).toString(36).substring(7)
+      player_id: 'player_' + (Math.random() + 1).toString(36).substring(7),
+      subtitles: null,
+      current_subtitle: null
     };
+  },
+  created() {
+    function toMilliseconds(stringVal) {
+      const split = stringVal.split(":");
+      const hours = Number.parseInt(split[0]);
+      const minutes = Number.parseInt(split[1]);
+      const seconds = Number.parseInt(split[2].split(",")[0]);
+      const milliseconds = Number.parseInt(split[2].split(",")[1]);
+
+      return ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds;
+    }
+    this.subtitles = this.song.transcript? this.song.transcript.split("\n\n").map(block => {
+      const retBlock = {};
+      const tmp = block.split("\n");
+      retBlock.id = Number.parseInt(tmp[0]);
+      retBlock.subtitle = tmp[2];
+      retBlock.startTime = toMilliseconds(tmp[1]?.split(" --> ")[0])
+      retBlock.stopTime = toMilliseconds(tmp[1]?.split(" --> ")[1])
+      return retBlock;
+    }):null;
   },
   mounted() {
     this.wavesurfer = WaveSurfer.create({
-      container: '#waveform',
+      container: '#waveform_'+this.player_id,
       waveColor: "lightgrey",
       progressColor: getCSSVariable("primary"),
       responsive: true,
@@ -73,11 +99,20 @@ export default {
     this.wavesurfer.on('pause', () => {
       playPauseButton.classList.add("paused");
       playPauseButton.classList.remove("playing");
+      this.current_subtitle = null;
     });
 
 
     this.wavesurfer.on('audioprocess', (time) => {
       document.getElementById(this.player_id + '_progressRange').value = time*100 / this.wavesurfer.getDuration();
+      if (this.subtitles) {
+        for (const subtitle of this.subtitles) {
+          if (subtitle.stopTime > time * 1000) {
+            this.current_subtitle = subtitle;
+            break;
+          }
+        }
+      }
     });
   },
   methods: {
@@ -105,6 +140,16 @@ wave {
   display: flex;
   width: 100%;
   align-items: center
+}
+
+.audio_subtitle {
+  width: 100%;
+  text-align: center;
+
+  p {
+    margin: 0;
+    //font-size: large;
+  }
 }
 
 .mediaicon {
