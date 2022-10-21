@@ -7,9 +7,7 @@
     </div>
     <span v-html="service.media.textbefore"/>
     <div v-for="(song, index) in service.media.mediafiles" :key="index+'_'+song.name">
-      <b-card class="m-3">
         <single-file-audio-player :song="song"></single-file-audio-player>
-      </b-card>
     </div>
     <span v-html="service.media.textafter"/>
 

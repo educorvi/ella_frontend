@@ -1,32 +1,37 @@
 <template>
-  <div :id="player_id">
-    <h5>{{ song.title }}</h5>
-    <div class="audiocontrols">
-      <button class="play-pause-button paused clickable" @click="()=>wavesurfer.playPause()" style="background: transparent; border: none">
-        <b-icon-play-circle class="mediaicon playcircle" :variant="ready?'primary':'lightgrey'"
-                            animation="pulse"></b-icon-play-circle>
-        <b-icon-pause-circle class="mediaicon pausecircle" variant="primary"
-                             animation="pulse"></b-icon-pause-circle>
-      </button>
-      <div style="width: 85%">
-        <div class="two_layers" v-show="loaded === 100">
-          <div class="layer1" style="z-index: 100; background: transparent">
-            <input :id="player_id+'_progressRange'" type="range" step=".1" value="0" style="height: 80px !important; width: 100%; padding: 0 !important;" @input="changeTime"/>
-          </div>
-          <div class="layer2">
-            <div id="wf_container">
-              <div :id="'waveform_'+player_id" style="height: 80px"></div>
+  <b-card class="m-3" no-body>
+    <b-card-img v-if="song.imageurl" :src="song.imageurl" :alt="song.imagecaption"></b-card-img>
+    <b-card-body>
+      <div :id="player_id">
+        <p style="font-size: large; font-weight: bold">{{ song.title }}</p>
+        <div class="audiocontrols">
+          <button aria-label="Wiedergabebutton" :aria-pressed="playing" class="play-pause-button clickable" @click="()=>wavesurfer.playPause()" style="background: transparent; border: none">
+            <b-icon-play-circle v-if="!playing" class="mediaicon playcircle" :variant="ready?'primary':'lightgrey'"
+                                animation="pulse"></b-icon-play-circle>
+            <b-icon-pause-circle v-else class="mediaicon pausecircle" variant="primary"
+                                 animation="pulse"></b-icon-pause-circle>
+          </button>
+          <div style="width: 85%">
+            <div class="two_layers" v-show="loaded === 100">
+              <div class="layer1" style="z-index: 100; background: transparent">
+                <input :aria-label="`Fortschrittseingabe für die Audiodatei ${song.title}`" :id="player_id+'_progressRange'" type="range" step=".1" value="0" style="height: 80px !important; width: 100%; padding: 0 !important;" @input="changeTime"/>
+              </div>
+              <div aria-hidden="true" class="layer2">
+                <div id="wf_container">
+                  <div :id="'waveform_'+player_id" style="height: 80px"></div>
+                </div>
+              </div>
             </div>
+            <b-progress :aria-label="`Ladefortschritt der Datei ${song.title}`" :value="loaded" :max="100" animated v-if="loaded < 100"></b-progress>
           </div>
         </div>
-        <b-progress :value="loaded" :max="100" animated v-if="loaded < 100"></b-progress>
+        <b-collapse class="audio_subtitle" :visible="!!current_subtitle">
+          <hr>
+          <p>{{current_subtitle?.subtitle}}</p>
+        </b-collapse>
       </div>
-    </div>
-    <b-collapse class="audio_subtitle" :visible="!!current_subtitle">
-      <hr>
-      <p>{{current_subtitle?.subtitle}}</p>
-    </b-collapse>
-  </div>
+    </b-card-body>
+  </b-card>
 </template>
 
 <script>
@@ -48,7 +53,8 @@ export default {
       wavesurfer: null,
       player_id: 'player_' + (Math.random() + 1).toString(36).substring(7),
       subtitles: null,
-      current_subtitle: null
+      current_subtitle: null,
+      playing: false
     };
   },
   created() {
@@ -100,14 +106,11 @@ export default {
       this.ready = true;
     });
 
-    const playPauseButton = document.getElementById(this.player_id).getElementsByClassName("play-pause-button")[0];
     this.wavesurfer.on('play', () => {
-      playPauseButton.classList.remove("paused");
-      playPauseButton.classList.add("playing");
+      this.playing = true;
     });
     this.wavesurfer.on('pause', () => {
-      playPauseButton.classList.add("paused");
-      playPauseButton.classList.remove("playing");
+      this.playing = false;
       this.current_subtitle = null;
     });
 
@@ -172,26 +175,6 @@ wave {
   width: 15%;
   min-width: 80px;
   height: fit-content;
-}
-
-.play-pause-button.paused {
-  .pausecircle {
-    display: none;
-  }
-
-  .playcircle {
-    display: block;
-  }
-}
-
-.play-pause-button.playing {
-  .pausecircle {
-    display: block;
-  }
-
-  .playcircle {
-    display: none;
-  }
 }
 
 .two_layers{
