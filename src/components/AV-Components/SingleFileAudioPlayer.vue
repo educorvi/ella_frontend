@@ -52,6 +52,12 @@ export default {
     };
   },
   created() {
+
+    /**
+     * Convert a string of the format hh:mm:ss,mmm to the corresponding duration in milliseconds
+     * @param stringVal
+     * @returns {number}
+     */
     function toMilliseconds(stringVal) {
       const split = stringVal.split(":");
       const hours = Number.parseInt(split[0]);
@@ -61,6 +67,8 @@ export default {
 
       return ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds;
     }
+
+    // parse srt syntax
     this.subtitles = this.song.transcript? this.song.transcript.split("\n\n").map(block => {
       const retBlock = {};
       const tmp = block.split("\n");
@@ -72,6 +80,7 @@ export default {
     }):null;
   },
   mounted() {
+    // Create a wavesurfer instance for the audio file
     this.wavesurfer = WaveSurfer.create({
       container: '#waveform_'+this.player_id,
       waveColor: "lightgrey",
@@ -104,7 +113,9 @@ export default {
 
 
     this.wavesurfer.on('audioprocess', (time) => {
+      // update slider progress
       document.getElementById(this.player_id + '_progressRange').value = time*100 / this.wavesurfer.getDuration();
+      // update subtitles
       if (this.subtitles) {
         for (const subtitle of this.subtitles) {
           if (subtitle.stopTime > time * 1000) {
