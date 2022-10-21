@@ -11,7 +11,7 @@
       <div style="width: 85%">
         <div class="two_layers" v-show="loaded === 100">
           <div class="layer1" style="z-index: 100; background: transparent">
-            <input :id="player_id+'_progressRange'" type="range" step=".1" value="0" style="height: 80px; width: 100%" @input="changeTime"/>
+            <input :id="player_id+'_progressRange'" type="range" step=".1" value="0" style="height: 80px !important; width: 100%; padding: 0 !important;" @input="changeTime"/>
           </div>
           <div class="layer2">
             <div id="wf_container">
