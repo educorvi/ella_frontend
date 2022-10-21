@@ -3,7 +3,7 @@
     <router-link to="/">
       <b-navbar-brand>
         <img v-if="img" id="logo" alt="Logo" src="@/assets/HeadLogo.png"/>
-        <span v-if="mainData && txt" class="title-text">{{ mainData.title }}</span>
+        <span v-if="mainData && txt" class="title-text">{{ mainData.title || title }}</span>
       </b-navbar-brand>
     </router-link>
     <b-navbar-nav class="ml-auto">
@@ -21,7 +21,7 @@
 
 <script>
 import {isLightColor} from "@/utilities/globals.mjs";
-import {NAVBAR_STYLE, NAVBAR_VARIANTS, THEME_COLOR} from "../../../config";
+import {NAVBAR_STYLE, NAVBAR_VARIANTS, THEME_COLOR, TITLE} from "../../../config";
 import {mapGetters} from "vuex";
 
 /**
@@ -44,6 +44,9 @@ export default {
     },
     txt() {
       return NAVBAR_STYLE !== NAVBAR_VARIANTS.LOGO;
+    },
+    title() {
+      return TITLE;
     },
     ...mapGetters(["mainData"]),
 
