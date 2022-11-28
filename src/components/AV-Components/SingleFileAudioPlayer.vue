@@ -5,11 +5,10 @@
       <div :id="player_id">
         <p style="font-size: large; font-weight: bold">{{ song.title }}</p>
         <div class="audiocontrols">
-          <button aria-label="Wiedergabebutton" :aria-pressed="playing" class="play-pause-button clickable"
-                  @click="()=>wavesurfer.playPause()" style="background: transparent; border: none">
-            <b-icon-play-circle v-if="!playing" class="mediaicon playcircle" :variant="ready?'primary':'lightgrey'"
+          <button aria-label="Wiedergabebutton" :aria-pressed="playing" class="play-pause-button clickable" style="background: transparent; border: none">
+            <b-icon-play-circle @click="()=>wavesurfer.play()" v-if="!playing" class="mediaicon playcircle" :variant="ready?'primary':'lightgrey'"
                                 animation="pulse"></b-icon-play-circle>
-            <b-icon-pause-circle v-else class="mediaicon pausecircle" variant="primary"
+            <b-icon-pause-circle @click="pause" v-else class="mediaicon pausecircle" variant="primary"
                                  animation="pulse"></b-icon-pause-circle>
           </button>
           <div style="width: 85%">
@@ -34,6 +33,7 @@
           <p>{{ current_subtitle?.subtitle }}</p>
         </b-collapse>
       </div>
+      <slot></slot>
     </b-card-body>
   </b-card>
 </template>
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      autoplay: false,
       ready: false,
       loaded: 0,
       wavesurfer: null,
@@ -110,11 +111,15 @@ export default {
     });
     this.wavesurfer.on('ready', () => {
       this.ready = true;
+      if (this.autoplay) {
+        this.wavesurfer.play();
+      }
     });
 
     this.wavesurfer.on('play', () => {
       this.$emit("play")
       this.playing = true;
+      this.autoplay = true;
     });
     this.wavesurfer.on('pause', () => {
       this.$emit("pause")
@@ -151,12 +156,13 @@ export default {
       this.wavesurfer.seekTo(rangeInputEvent.target.value / 100)
     },
     pause() {
+      this.autoplay = false;
       this.wavesurfer.pause();
     },
   },
   watch: {
-    song(oldSong, newSong) {
-      console.log("hellau")
+    song(newSong) {
+      document.getElementById(this.player_id + '_progressRange').value = 0;
       this.loaded = 0;
       this.ready = false;
       this.wavesurfer.load(newSong.url);

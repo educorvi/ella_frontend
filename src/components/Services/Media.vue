@@ -7,8 +7,13 @@
     </div>
     <span v-html="service.media.textbefore"/>
     <div v-if="service.media.type === 'audio'">
-      <div v-for="(song, index) in service.media.mediafiles" :key="index+'_'+song.name">
-        <single-file-audio-player @play="pauseCurrent(index)" :song="song" :ref="'player'+index"></single-file-audio-player>
+      <div v-if="service.media.playlist">
+        <playlist-player :songs="service.media.mediafiles"/>
+      </div>
+      <div v-else>
+        <div v-for="(song, index) in service.media.mediafiles" :key="index+'_'+song.name">
+          <single-file-audio-player @play="pauseCurrent(index)" :song="song" :ref="'player'+index"></single-file-audio-player>
+        </div>
       </div>
     </div>
     <video-player v-else-if="service.media.type === 'video'" :videos="service.media.mediafiles"/>
@@ -23,10 +28,11 @@
 import serviceMixin from "/src/components/Services/serviceMixin.js";
 import SingleFileAudioPlayer from "/src/components/AV-Components/SingleFileAudioPlayer.vue";
 import VideoPlayer from "/src/components/AV-Components/VideoPlayer.vue";
+import PlaylistPlayer from "../AV-Components/PlaylistPlayer.vue";
 
 export default {
   name: "MediaService",
-  components: {VideoPlayer, SingleFileAudioPlayer},
+  components: {PlaylistPlayer, VideoPlayer, SingleFileAudioPlayer},
   mixins: [serviceMixin],
   data() {
     return {
