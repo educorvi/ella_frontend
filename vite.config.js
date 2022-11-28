@@ -6,6 +6,13 @@ import {TITLE, THEME_COLOR, API_ROOT_URL} from "./config";
 
 // https://vitejs.dev/config/
 const commonConfig = {
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: THEME_COLOR ? '$primary: ' + THEME_COLOR + ";" : "",
+            }
+        }
+    },
     plugins: [
         vue(),
         VitePWA({
