@@ -17,7 +17,7 @@
       </div>
       <hr>
     </div>
-    <json-form v-if="form" :json="form" :onSubmit="onSubmit" :ui="service.ui" :disableValidation="true">
+    <json-form v-if="form" :json="form" :onSubmit="onSubmit" :filledData="filledFormData" :ui="service.ui" :disableValidation="true">
       <div style="width: 100%; display: flex; justify-content: center">
         <ActionButtonGroup :doing="doing" :save-button="!DISABLE_FORM_SAVING"
                            :selected="selected" :service="service"
@@ -111,14 +111,7 @@ export default {
       this.form = null;
       this.$nextTick().then(() => {
         let form = JSON.parse(JSON.stringify(this.service.form));
-        const d = data.data;
-        for (const key of Object.keys(d)) {
-          const split = key.split("/");
-          const k = split[split.length - 1];
-
-          form.properties[k].default = d[key];
-        }
-
+        this.filledFormData = data.data;
         this.$store.commit("load", null);
         this.form = form;
       });

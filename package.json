@@ -24,7 +24,7 @@
     "postdoc": "git add -A docs"
   },
   "dependencies": {
-    "@educorvi/vue-json-form": "^1.5.3",
+    "@educorvi/vue-json-form": "^2.0.0",
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.2",
