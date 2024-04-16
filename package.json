@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@educorvi/vue-json-form": "^2.0.0",
-    "axios": "^0.21.0",
+    "axios": "1.6.8",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.2",
     "bootswatch": "^4.5.3",
@@ -64,6 +64,7 @@
     "terminal-kit": "^2.0.7",
     "vite": "3.2.7",
     "vite-plugin-pwa": "^0.13.3",
+    "vue-pwa-asset-generator": "^1.7.3",
     "wait-on": "^5.2.0"
   },
   "engines": {

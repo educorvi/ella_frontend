@@ -57,7 +57,6 @@ const commonConfig = {
                         },
                     },
                     {
-                        // the last option is due to plone images ending on 'image'
                         urlPattern: new RegExp('.*(mp3|wav)'),
                         handler: 'StaleWhileRevalidate',
                         options: {
