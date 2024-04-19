@@ -44,6 +44,7 @@ const commonConfig = {
             },
             workbox: {
                 globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+                navigateFallbackDenylist: [/pdf*/],
                 runtimeCaching: [
                     {
                         // the last option is due to plone images ending on 'image'

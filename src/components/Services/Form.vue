@@ -156,7 +156,7 @@ export default {
        * @returns {string}
        */
       function convertToBase64Link(type, base64data) {
-        return `data:${type};base64,${escape(base64data)}`
+        return `data:${type};base64,${encodeURIComponent(base64data)}`
       }
 
       /**
