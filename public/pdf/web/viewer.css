@@ -16,6 +16,10 @@
  File was modified for ella
  */
 
+.dropdownToolbarButton > select {
+  text-align: center;
+}
+
 #viewAttachments, #viewLayers {
   visibility: hidden;
 }
@@ -1577,7 +1581,7 @@ html[dir="rtl"] #toolbarViewerLeft > .toolbarButton:first-child {
   pointer-events: none;
   max-width: 16px;
 }
-}
+
 html[dir="ltr"] .dropdownToolbarButton::after {
   right: 7px;
 }
