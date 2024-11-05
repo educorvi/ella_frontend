@@ -1,4 +1,16 @@
 {
+  "plugins": {
+    "@csmith/release-it-calver-plugin": {
+      "format": "yyyy.mm.minor"
+    },
+    "@release-it/conventional-changelog": {
+      "preset": {
+        "name": "angular"
+      },
+      "infile": "CHANGELOG.md",
+      "whatBump": false
+    }
+  },
   "git": {
     "commitMessage": "Release v${version}",
     "requireCleanWorkingDir": false,
@@ -27,16 +39,5 @@
       "npm run clean",
       "echo Successfully released ${name} v${version} to ${repo.repository}."
     ]
-  },
-  "plugins": {
-    "@csmith/release-it-calver-plugin": {
-      "format": "yyyy.mm.minor"
-    },
-    "@release-it/conventional-changelog": {
-      "preset": {
-        "name": "angular"
-      },
-      "infile": "CHANGELOG.md"
-    }
   }
 }
