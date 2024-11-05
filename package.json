@@ -24,8 +24,8 @@
     "postdoc": "git add -A docs"
   },
   "dependencies": {
-    "@educorvi/vue-json-form": "^2.0.0",
-    "axios": "1.6.8",
+    "@educorvi/vue-json-form": "^2.1.0",
+    "axios": "1.7.4",
     "bootstrap": "^4.5.3",
     "bootstrap-vue": "^2.21.2",
     "bootswatch": "^4.5.3",
@@ -43,6 +43,7 @@
     "wavesurfer.js": "^6.3.0"
   },
   "devDependencies": {
+    "@csmith/release-it-calver-plugin": "^2023.12.0",
     "@neferin/zip-folder": "^1.0.4",
     "@vitejs/plugin-vue2": "^2.0.1",
     "better-docs": "^2.3.2",
@@ -57,7 +58,7 @@
     "jsdoc": "^3.6.6",
     "jsdoc-vuejs": "^3.0.9",
     "mkdirp": "^1.0.4",
-    "release-it": "^14.2.1",
+    "release-it": "^17.10.0",
     "replace-in-file": "^6.1.0",
     "rimraf": "^3.0.2",
     "sass": "^1.32.12",

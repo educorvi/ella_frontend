@@ -2,16 +2,17 @@
   <div class="w-100">
     <b-button-group :vertical="stacked" class="mb-5 mt-2 w-100">
       <b-button v-for="(action, index) in service['formactions']" :key="action.name" :disabled="doing[index]"
+                :formnovalidate="action['method'] === 'SAVE'"
                 :variant="action['cssclass']"
                 type="submit" @click="selected(index)">
         <b-spinner v-if="doing[index]" class="m-0" style="width: 1.25rem; height: 1.25rem"/>
         <span v-else>{{ action.title }}</span></b-button>
-<!--      <b-button v-if="saveButton" type="submit" variant="primary" @click="selected('save')">Speichern</b-button>-->
+      <!--      <b-button v-if="saveButton" type="submit" variant="primary" @click="selected('save')">Speichern</b-button>-->
     </b-button-group>
 
     <b-modal v-for="(action) in service['formactions']" :id="'modal_'+action.name" :key="'modal_'+action.name"
              hide-footer :title="action['modaltitle'] || 'Bitte zusätzliche Informationen angeben'">
-      <p v-if="action['modaltext']">{{action['modaltext']}}</p>
+      <p v-if="action['modaltext']">{{ action['modaltext'] }}</p>
       <json-form v-if="action.additional" :json="action.additional" :onSubmit="submitModal">
         <hr>
         <b-button-group class="w-100">
