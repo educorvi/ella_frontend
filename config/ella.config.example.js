@@ -70,4 +70,15 @@ export const DISABLE_FORM_SAVING = false
  */
 export const SIDEBAR_TITLE = ""
 
+/**
+ * Die URL des Matomo-Analytics-Servers.
+ * @type {string | undefined}
+ */
+export const MATOMO_HOST = "http://localhost:8080/";
+
+/**
+ * Die ID der Matomo-Analytics-Site.
+ * @type {string | undefined}
+ */
+export const MATOMO_SITE_ID = "1";
 

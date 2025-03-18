@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import {CardPlugin, SidebarPlugin, ButtonPlugin, JumbotronPlugin, SpinnerPlugin, NavbarPlugin, BootstrapVue, BIconX, BIconJustify, BIconPlayCircle, BIconPauseCircle} from 'bootstrap-vue'
+import {
+    CardPlugin,
+    SidebarPlugin,
+    ButtonPlugin,
+    JumbotronPlugin,
+    SpinnerPlugin,
+    NavbarPlugin,
+    BootstrapVue,
+    BIconX,
+    BIconJustify,
+    BIconPlayCircle,
+    BIconPauseCircle
+} from 'bootstrap-vue'
 import './styles.scss';
 
 // Vue.use(BootstrapVue);
@@ -18,18 +30,34 @@ Vue.component("BIconPlayCircle", BIconPlayCircle);
 Vue.component("BIconPauseCircle", BIconPauseCircle);
 
 import Vue2TouchEvents from "vue2-touch-events";
+
 Vue.use(Vue2TouchEvents);
 
 import {MdSteppers, MdButton} from "vue-material/dist/components"
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
+
 Vue.use(MdSteppers);
 Vue.use(MdButton);
 
-import { registerSW } from "virtual:pwa-register";
+import VueMatomo from 'vue-matomo';
+import {MATOMO_HOST, MATOMO_SITE_ID} from "../config";
+
+if (MATOMO_HOST && MATOMO_SITE_ID) {
+    Vue.use(VueMatomo, {
+        host: MATOMO_HOST,
+        siteId: MATOMO_SITE_ID,
+        router: router,
+        requireConsent: false,
+        disableCookies: true
+
+    });
+}
+
+import {registerSW} from "virtual:pwa-register";
 
 if ("serviceWorker" in navigator && !/localhost/.test(window.location)) {
-  registerSW();
+    registerSW();
 }
 
 import router from './router'
@@ -38,7 +66,7 @@ import store from './store'
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')

@@ -139,6 +139,23 @@ async function configure() {
         replace({files: file, from: /DISABLE_FORM_SAVING_VALUE/g, to: false});
     }
 
+    await waitOn(opts);
+    term("\nBitte geben Sie die URL des Matomo-Analytics-Servers ein.\n");
+    input = await term.inputField(
+        {autoCompleteMenu: false}
+    ).promise;
+    replace({files: file, from: /%MATOMO_HOST%/g, to: input});
+
+    // Prompt for Matomo Site ID
+    await waitOn(opts);
+    term("\nBitte geben Sie die ID der Matomo-Analytics-Site ein.\n");
+    input = await term.inputField(
+        {autoCompleteMenu: false}
+    ).promise;
+    replace({files: file, from: /MATOMO_SITE_ID_VALUE/g, to: input});
+
+    await waitOn(opts);
+
     selectReleaseAndInstall().then(() => process.exit(0)).catch(() => process.exit(-1));
 
 
