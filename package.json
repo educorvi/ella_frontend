@@ -1,6 +1,6 @@
 {
   "name": "ella",
-  "version": "2024.11.0",
+  "version": "2025.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -37,6 +37,7 @@
     "videojs-playlist": "^5.0.0",
     "vue": "^2.6.12",
     "vue-material": "^1.0.0-beta-15",
+    "vue-matomo": "^4.2.0",
     "vue-router": "^3.2.0",
     "vue2-touch-events": "^3.1.1",
     "vuex": "^3.4.0",

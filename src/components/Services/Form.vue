@@ -17,7 +17,8 @@
       </div>
       <hr>
     </div>
-    <json-form v-if="form" :json="form" :onSubmit="onSubmit" :filledData="filledFormData" :ui="service.ui" :disableValidation="true">
+    <json-form v-if="form" :json="form" :onSubmit="onSubmit" :filledData="filledFormData" :ui="service.ui"
+               :disableValidation="true">
       <div style="width: 100%; display: flex; justify-content: center">
         <ActionButtonGroup :doing="doing" :save-button="!DISABLE_FORM_SAVING"
                            :selected="selected" :service="service"
@@ -82,6 +83,7 @@ export default {
     } else {
       this.fill(this.load);
     }
+    window._paq?.push(['trackEvent', 'Form', 'start', this.form.name]);
   },
   computed: {
     ...mapGetters(["load"]),
@@ -121,6 +123,7 @@ export default {
      * @param file The file to load
      */
     loadForm(file) {
+      window._paq?.push(['trackEvent', 'Form', 'load', this.form.name]);
       if (file instanceof File) {
         this.upload = false;
         file.text().then(contents => this.fill(JSON.parse(contents)));
@@ -275,8 +278,6 @@ export default {
         await writable.close();
       }
 
-
-
       const method = this.service["formactions"][this.indexOfAction]?.method;
       if (method === 'SAVE') {
         // Speichern
@@ -285,9 +286,11 @@ export default {
         } else {
           saveAs(new Blob([JSON.stringify(toSave)], {type: "application/efa"}), this.service.title.replace(/ /g, "_") + ".efa");
         }
+        window._paq?.push(['trackEvent', 'Form', `action-save`, this.form.name]);
       } else if (method === "REDIRECT") {
         //Redirect
         this.$router.push("/services/" + this.service["formactions"][this.indexOfAction].name);
+        window._paq?.push(['trackEvent', 'Form', `action-redirect`, this.form.name]);
       } else {
         //Button action
         if (this.service["formactions"][this.indexOfAction].additional || this.service["formactions"][this.indexOfAction]['modaltext']) {
@@ -297,6 +300,7 @@ export default {
           //Request an das Backend
           this.sendData(data);
         }
+        window._paq?.push(['trackEvent', 'Form', `action-${this.service["formactions"][this.indexOfAction]?.name}`, this.form.name]);
       }
     }
 

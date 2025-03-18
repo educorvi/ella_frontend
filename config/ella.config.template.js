@@ -70,3 +70,14 @@ export const DISABLE_FORM_SAVING = DISABLE_FORM_SAVING_VALUE
  */
 export const SIDEBAR_TITLE = "%SIDEBAR_TITLE%"
 
+/**
+ * Die URL des Matomo-Analytics-Servers.
+ * @type {string | undefined}
+ */
+export const MATOMO_HOST = "%MATOMO_HOST%";
+
+/**
+ * Die ID der Matomo-Analytics-Site.
+ * @type {string | undefined}
+ */
+export const MATOMO_SITE_ID = "MATOMO_SITE_ID_VALUE";
