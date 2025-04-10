@@ -1,0 +1,8 @@
+.pnp.*
+.yarn/*
+
+node_modules
+dist
+/*.json
+/*.yml
+/*.yaml
