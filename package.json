@@ -1,92 +1,31 @@
 {
-  "name": "ella",
-  "version": "2025.3.0",
+  "name": "ella_frontend",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "npm run theme:init && npm run createSettings",
-    "createSettings": "node config/createSettings.cjs",
-    "createSettings:override": "node config/createSettings.cjs --override",
     "dev": "vite",
-    "theme:init": "node config/installTheme.cjs init",
-    "theme:install": "node config/installTheme.cjs install",
-    "theme:select": "node config/installTheme.cjs select",
-    "theme:update": "node config/installTheme.cjs update",
-    "serve": "vite preview",
-    "build": "vite build",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "clean": "npm run clean:dist",
-    "clean:dist": "del-cli dist*",
-    "generateIcons": "npx vue-pwa-asset-generator --no-manifest -a src/assets/AppLogo.png -o ./public/img/icons && cp ./public/img/icons/favicon-32x32.png public/favicon.png",
-    "zip": "zip-folder dist",
-    "release": "dotenv -e .env.local release-it",
-    "doc": "node_modules/.bin/jsdoc -c jsdoc.json -R README.md",
-    "postdoc": "git add -A docs"
+    "build": "run-p type-check \"build-only {@}\" --",
+    "preview": "vite preview",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --build",
+    "format": "prettier --write src/"
   },
   "dependencies": {
-    "@educorvi/vue-json-form": "^2.1.0",
-    "axios": "1.7.4",
-    "bootstrap": "^4.5.3",
-    "bootstrap-vue": "^2.21.2",
-    "bootswatch": "^4.5.3",
-    "dotenv": "^8.2.0",
-    "file-saver": "^2.0.5",
-    "print-js": "^1.6.0",
-    "register-service-worker": "^1.7.1",
-    "video.js": "^7.20.3",
-    "videojs-playlist": "^5.0.0",
-    "vue": "^2.6.12",
-    "vue-material": "^1.0.0-beta-15",
-    "vue-matomo": "^4.2.0",
-    "vue-router": "^3.2.0",
-    "vue2-touch-events": "^3.1.1",
-    "vuex": "^3.4.0",
-    "wavesurfer.js": "^6.3.0"
+    "pinia": "^3.0.1",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@csmith/release-it-calver-plugin": "^2023.12.0",
-    "@neferin/zip-folder": "^1.0.4",
-    "@release-it/conventional-changelog": "^9.0.2",
-    "@vitejs/plugin-vue2": "^2.0.1",
-    "better-docs": "^2.3.2",
-    "chokidar": "^3.5.1",
-    "copyfiles": "^2.4.1",
-    "create-file": "^1.0.1",
-    "del-cli": "^3.0.1",
-    "dotenv-cli": "^4.0.0",
-    "eslint": "^8.28.0",
-    "eslint-plugin-vue": "^8.7.1",
-    "extract-zip": "^2.0.1",
-    "jsdoc": "^3.6.6",
-    "jsdoc-vuejs": "^3.0.9",
-    "mkdirp": "^1.0.4",
-    "release-it": "^17.10.0",
-    "replace-in-file": "^6.1.0",
-    "rimraf": "^3.0.2",
-    "sass": "^1.32.12",
-    "terminal-kit": "^2.0.7",
-    "vite": "3.2.7",
-    "vite-plugin-pwa": "^0.13.3",
-    "vue-pwa-asset-generator": "^1.7.3",
-    "wait-on": "^5.2.0"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "es2021": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@tsconfig/node22": "^22.0.1",
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "npm-run-all2": "^7.0.2",
+    "prettier": "3.5.3",
+    "typescript": "~5.8.0",
+    "vite": "^6.2.4",
+    "vite-plugin-vue-devtools": "^7.7.2",
+    "vue-tsc": "^2.2.8"
+  }
 }
