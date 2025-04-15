@@ -1,3 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { storeToRefs } from 'pinia';
+import { useApplicationStore } from '@/stores/store.ts';
 
-<template>Home</template>
+const { data } = storeToRefs(useApplicationStore());
+</script>
+
+<template>
+    <span v-html="data?.bodytext"></span>
+</template>

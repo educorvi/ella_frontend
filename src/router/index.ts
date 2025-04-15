@@ -1,8 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+    createRouter,
+    createWebHashHistory,
+    createWebHistory,
+} from 'vue-router';
 import Home from '../views/Home.vue';
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHashHistory(),
     routes: [
         {
             path: '/',
@@ -17,7 +21,25 @@ const router = createRouter({
             // which is lazy-loaded when the route is visited.
             component: () => import('../views/About.vue'),
         },
+        {
+            path: '/html',
+            name: 'HTML',
+            component: () => import('../views/HTMLResponse.vue'),
+        },
+        {
+            path: '/services/:service',
+            name: 'Service',
+            component: () => import('../views/Service.vue'),
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: () => import('../views/notFound.vue'),
+        },
     ],
+    scrollBehavior: () => {
+        return { left: 0, top: 0 };
+    },
 });
 
 export default router;

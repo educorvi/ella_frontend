@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
-import type { Welcome } from '@/api-client';
 import { type Ref, ref } from 'vue';
+import type { Welcome } from '@/api-client';
 
 export const useApplicationStore = defineStore('application', () => {
     /**
      * The main application data
      */
-    const data: Ref<Welcome | null> = ref(null);
+    const data: Ref<Welcome | undefined> = ref(undefined);
 
     /**
      * Sidebar opened

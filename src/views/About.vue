@@ -5,5 +5,5 @@
     </div>
 </template>
 <script lang="ts" setup>
-const version = __APP_VERSION__;
+import { version } from '../../package.json';
 </script>

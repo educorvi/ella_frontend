@@ -56,6 +56,7 @@ body {
 
 .main{
     max-width: $maxContentWidth;
+    width: 100%;
     @extend .p-3;
     //padding: 8px 12px;
     //text-align: center;

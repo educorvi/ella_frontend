@@ -3,8 +3,11 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import Icons from 'unplugin-icons/vite';
 import Components from 'unplugin-vue-components/vite';
+import IconsResolve from 'unplugin-icons/resolver';
 import { BootstrapVueNextResolver } from 'bootstrap-vue-next';
+import { THEME_COLOR } from './src/config/ella.config';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,15 +15,27 @@ export default defineConfig({
         vue(),
         vueDevTools(),
         Components({
-            resolvers: [BootstrapVueNextResolver()],
+            resolvers: [BootstrapVueNextResolver(), IconsResolve()],
+            dts: true,
+        }),
+        Icons({
+            compiler: 'vue3',
+            autoInstall: true,
         }),
     ],
-    define: {
-        __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
-    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                quietDeps: true,
+                additionalData: THEME_COLOR
+                    ? '$primary: ' + THEME_COLOR + ';'
+                    : '',
+            },
         },
     },
 });

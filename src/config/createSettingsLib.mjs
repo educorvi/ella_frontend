@@ -45,7 +45,7 @@ export async function configure(file) {
     const opts = { resources: [file] };
 
     term.dim('Datei wird kopiert...\n');
-    fs.copyFileSync('src/config/ella.config.template.ts', file);
+    fs.copyFileSync('src/config/ella.config.template.tts', file);
 
     let input;
 
