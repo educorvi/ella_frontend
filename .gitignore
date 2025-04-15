@@ -9,3 +9,8 @@
 dist
 
 node_modules
+
+src/theme
+src/config/ella.config.ts
+
+temp

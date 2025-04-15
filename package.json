@@ -10,10 +10,18 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write src/",
-    "generate-api-client": "openapi-ts --no-log-file -i https://ella.uv-kooperation.de/openapi.json -o src/api-client -c @hey-api/client-axios"
+    "generate-api-client": "openapi-ts --no-log-file -i https://ella.uv-kooperation.de/openapi.json -o src/api-client -c @hey-api/client-axios",
+    "postinstall": "yarn run theme:init && yarn run createSettings",
+    "createSettings": "node src/config/createSettings.mjs",
+    "createSettings:override": "node src/config/createSettings.mjs --override",
+    "theme:init": "node src/config/installTheme.mjs init",
+    "theme:install": "node src/config/installTheme.mjs install",
+    "theme:select": "node src/config/installTheme.mjs select",
+    "theme:update": "node src/config/installTheme.mjs update"
   },
   "dependencies": {
     "@hey-api/client-axios": "^0.7.0",
+    "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
     "bootstrap-vue-next": "^0.28.5",
     "pinia": "^3.0.1",
@@ -24,17 +32,26 @@
     "@hey-api/openapi-ts": "^0.66.3",
     "@tsconfig/node22": "^22.0.1",
     "@types/bootstrap": "^5",
+    "@types/copyfiles": "^2",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.7.0",
+    "copyfiles": "^2.4.1",
+    "create-file": "^1.0.1",
+    "extract-zip": "^2.0.1",
+    "mkdirp": "^3.0.1",
     "npm-run-all2": "^7.0.2",
     "prettier": "^3.5.3",
+    "replace-in-file": "^8.3.0",
+    "rimraf": "^6.0.1",
     "sass-embedded": "^1.86.3",
+    "terminal-kit": "^3.1.2",
     "typescript": "~5.8.0",
     "unplugin-vue-components": "^28.4.1",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^2.2.8",
+    "wait-on": "^8.0.3"
   },
   "packageManager": "yarn@4.9.0"
 }

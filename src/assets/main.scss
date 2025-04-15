@@ -1,6 +1,6 @@
 $maxContentWidth: 900px;
 
-//@import './theme/variables';
+@import '../theme/variables';
 //Bootstrap Import
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
@@ -78,5 +78,5 @@ body {
     hyphens: auto;
 }
 
-//@import "./theme/theme";
+@import "../theme/theme";
 
