@@ -20,11 +20,11 @@
     "theme:update": "node src/config/installTheme.mjs update"
   },
   "dependencies": {
-    "@educorvi/vue-json-form": "^3.0.0-alpha.10",
+    "@educorvi/vue-json-form": "^3.0.0-beta.1",
     "@hey-api/client-axios": "^0.7.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
-    "bootstrap-vue-next": "^0.28.5",
+    "bootstrap-vue-next": "^0.29.0",
     "pinia": "^3.0.1",
     "video.js": "8.22.0",
     "videojs-playlist": "^5.2.0",

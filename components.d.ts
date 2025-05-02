@@ -28,6 +28,8 @@ declare module 'vue' {
     EllaNavbar: typeof import('./src/components/nav/EllaNavbar.vue')['default']
     Form: typeof import('./src/components/Services/Form.vue')['default']
     IBiList: typeof import('~icons/bi/list')['default']
+    IBiPauseCircle: typeof import('~icons/bi/pause-circle')['default']
+    IBiPlayCircle: typeof import('~icons/bi/play-circle')['default']
     IBiX: typeof import('~icons/bi/x')['default']
     Media: typeof import('./src/components/Services/Media.vue')['default']
     Page: typeof import('./src/components/Services/Page.vue')['default']

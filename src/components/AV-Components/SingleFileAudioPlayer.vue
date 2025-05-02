@@ -17,27 +17,27 @@
                         class="play-pause-button clickable"
                         style="background: transparent; border: none"
                     >
-                        <b-icon-play-circle
+                        <IBiPlayCircle
                             @click="
                                 () => {
-                                    if (ready) wavesurfer.play();
+                                    if (ready) wavesurfer?.play();
                                 }
                             "
                             v-if="!playing"
                             class="mediaicon playcircle"
                             :variant="ready ? 'primary' : 'lightgrey'"
                             animation="pulse"
-                        ></b-icon-play-circle>
-                        <b-icon-pause-circle
+                        ></IBiPlayCircle>
+                        <IBiPauseCircle
                             @click="pause"
                             v-else
                             class="mediaicon pausecircle"
-                            variant="primary"
+                            :variant="ready ? 'primary' : 'lightgrey'"
                             animation="pulse"
-                        ></b-icon-pause-circle>
+                        ></IBiPauseCircle>
                     </button>
                     <div style="width: 85%">
-                        <div class="two_layers" v-show="loaded === 100">
+                        <div class="two_layers" v-show="ready">
                             <div
                                 class="layer1"
                                 style="z-index: 100; background: transparent"
@@ -70,14 +70,11 @@
                             :value="loaded"
                             :max="100"
                             animated
-                            v-if="loaded < 100"
+                            v-if="!ready"
                         ></b-progress>
                     </div>
                 </div>
-                <b-collapse
-                    class="audio_subtitle"
-                    :visible="!!current_subtitle"
-                >
+                <b-collapse class="audio_subtitle" v-model="playing">
                     <hr />
                     <p>{{ current_subtitle?.subtitle }}</p>
                 </b-collapse>
@@ -87,150 +84,184 @@
     </b-card>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
+import {
+    ref,
+    watch,
+    onMounted,
+    onBeforeUnmount,
+    computed,
+    type ComputedRef,
+} from 'vue';
 import WaveSurfer from 'wavesurfer.js';
 import { getCSSVariable } from '@/lib/global';
+import type { MediaFile } from '@/api-client';
 
-export default {
-    name: 'SingleFileAudioPlayer',
-    props: {
-        song: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
+const props = defineProps<{ song: MediaFile }>();
+
+const emit = defineEmits<{
+    (e: 'play'): void;
+    (e: 'pause'): void;
+    (e: 'finish'): void;
+}>();
+
+/* ------------------------------------------------------------------ */
+/* 2.  Reactive state                                                 */
+/* ------------------------------------------------------------------ */
+const autoplay = ref(false);
+const ready = ref(false);
+const loaded = ref(0);
+const wavesurfer = ref<WaveSurfer | null>(null);
+const player_id = 'player_' + (Math.random() + 1).toString(36).substring(7);
+
+interface SubtitleBlock {
+    id: number;
+    subtitle: string;
+    startTime: number;
+    stopTime: number;
+}
+
+const subtitles = ref<SubtitleBlock[] | null>(null);
+const current_subtitle = ref<SubtitleBlock | null>(null);
+const playing = ref(false);
+const error = ref(false);
+
+/* ------------------------------------------------------------------ */
+/* 3.  Helpers                                                        */
+/* ------------------------------------------------------------------ */
+function toMilliseconds(time: string): number {
+    const [h, m, rest] = time.split(':');
+    const [s, ms] = rest.split(',');
+    return ((+h * 60 + +m) * 60 + +s) * 1000 + +ms;
+}
+
+function parseSubtitles(transcript?: string): SubtitleBlock[] | null {
+    if (!transcript) return null;
+    return transcript.split('\n\n').map((block) => {
+        const [id, times, subtitle] = block.split('\n');
+        const [start, stop] = times.split(' --> ');
         return {
-            autoplay: false,
-            ready: false,
-            loaded: 0,
-            wavesurfer: null,
-            player_id:
-                'player_' + (Math.random() + 1).toString(36).substring(7),
-            subtitles: null,
-            current_subtitle: null,
-            playing: false,
-            error: false,
+            id: +id,
+            subtitle,
+            startTime: toMilliseconds(start),
+            stopTime: toMilliseconds(stop),
         };
-    },
-    created() {
-        /**
-         * Convert a string of the format hh:mm:ss,mmm to the corresponding duration in milliseconds
-         * @param stringVal
-         * @returns {number}
-         */
-        function toMilliseconds(stringVal) {
-            const split = stringVal.split(':');
-            const hours = Number.parseInt(split[0]);
-            const minutes = Number.parseInt(split[1]);
-            const seconds = Number.parseInt(split[2].split(',')[0]);
-            const milliseconds = Number.parseInt(split[2].split(',')[1]);
+    });
+}
 
-            return (
-                ((hours * 60 + minutes) * 60 + seconds) * 1000 + milliseconds
-            );
+/* ------------------------------------------------------------------ */
+/* 4.  Lifecycle: mount + unmount                                     */
+/* ------------------------------------------------------------------ */
+onMounted(() => {
+    subtitles.value = parseSubtitles(props.song.transcript);
+
+    wavesurfer.value = WaveSurfer.create({
+        container: '#waveform_' + player_id,
+        waveColor: 'lightgrey',
+        progressColor: getCSSVariable('bs-primary'),
+        interact: false,
+        barWidth: 4,
+        normalize: true,
+        height: 80,
+        cursorWidth: 0,
+        backend: 'MediaElement',
+    });
+
+    wavesurfer.value.load(props.song.url);
+
+    wavesurfer.value.on('loading', (p: number) => {
+        loaded.value = p;
+    });
+
+    wavesurfer.value.on('ready', () => {
+        ready.value = true;
+        if (autoplay.value) wavesurfer.value?.play();
+    });
+
+    wavesurfer.value.on('play', () => {
+        emit('play');
+        playing.value = true;
+        autoplay.value = true;
+    });
+
+    wavesurfer.value.on('pause', () => {
+        emit('pause');
+        playing.value = false;
+        current_subtitle.value = null;
+    });
+
+    wavesurfer.value.on('finish', () => emit('finish'));
+
+    wavesurfer.value.on('error', (e: unknown) => {
+        console.error(e);
+        Object.assign(error, { value: true });
+        Object.assign(ready, { value: false });
+        Object.assign(playing, { value: false });
+        current_subtitle.value = {
+            id: -1,
+            subtitle:
+                'Fehler beim Laden der Audiodatei. Bitte laden Sie die Seite neu.',
+            startTime: 0,
+            stopTime: 0,
+        };
+    });
+
+    wavesurfer.value.on('audioprocess', (time: number) => {
+        // range‑slider progress
+        const range = document.getElementById(
+            player_id + '_progressRange'
+        ) as HTMLInputElement | null;
+
+        if (range && wavesurfer.value) {
+            range.value = (
+                (time * 100) /
+                wavesurfer.value.getDuration()
+            ).toString();
         }
 
-        // parse srt syntax
-        this.subtitles = this.song.transcript
-            ? this.song.transcript.split('\n\n').map((block) => {
-                  const retBlock = {};
-                  const tmp = block.split('\n');
-                  retBlock.id = Number.parseInt(tmp[0]);
-                  retBlock.subtitle = tmp[2];
-                  retBlock.startTime = toMilliseconds(
-                      tmp[1]?.split(' --> ')[0]
-                  );
-                  retBlock.stopTime = toMilliseconds(tmp[1]?.split(' --> ')[1]);
-                  return retBlock;
-              })
-            : null;
-    },
-    mounted() {
-        // Create a wavesurfer instance for the audio file
-        this.wavesurfer = WaveSurfer.create({
-            container: '#waveform_' + this.player_id,
-            waveColor: 'lightgrey',
-            progressColor: getCSSVariable('primary'),
-            responsive: true,
-            interact: false,
-            barWidth: 4,
-            normalize: true,
-            height: 80,
-            cursorWidth: 0,
-            barMinHeight: 0.5,
-            backend: 'MediaElement',
-        });
-        this.wavesurfer.load(this.song.url);
-        this.wavesurfer.on('loading', (p) => {
-            this.loaded = p;
-        });
-        this.wavesurfer.on('ready', () => {
-            this.ready = true;
-            if (this.autoplay) {
-                this.wavesurfer.play();
-            }
-        });
+        // subtitle update
+        if (subtitles.value && ready.value) {
+            const next = subtitles.value.find((b) => b.stopTime > time * 1000);
+            if (next) current_subtitle.value = next;
+        }
+    });
+});
 
-        this.wavesurfer.on('play', () => {
-            this.$emit('play');
-            this.playing = true;
-            this.autoplay = true;
-        });
-        this.wavesurfer.on('pause', () => {
-            this.$emit('pause');
-            this.playing = false;
-            this.current_subtitle = null;
-        });
-        this.wavesurfer.on('error', (e) => {
-            console.error(e);
-            this.error = true;
-            this.ready = false;
-            this.playing = false;
-            this.current_subtitle.subtitle =
-                'Fehler beim Laden der Audiodatei. Bitte laden Sie die Seite neu.';
-        });
-        this.wavesurfer.on('finish', () => {
-            this.$emit('finish');
-        });
+onBeforeUnmount(() => wavesurfer.value?.destroy());
 
-        this.wavesurfer.on('audioprocess', (time) => {
-            // update slider progress
-            document.getElementById(this.player_id + '_progressRange').value =
-                (time * 100) / this.wavesurfer.getDuration();
-            // update subtitles
-            if (this.subtitles) {
-                for (const subtitle of this.subtitles) {
-                    if (subtitle.stopTime > time * 1000 && this.ready) {
-                        this.current_subtitle = subtitle;
-                        break;
-                    }
-                }
-            }
-        });
-    },
-    beforeDestroy() {
-        this.wavesurfer.destroy();
-    },
-    methods: {
-        changeTime(rangeInputEvent) {
-            this.wavesurfer.seekTo(rangeInputEvent.target.value / 100);
-        },
-        pause() {
-            this.autoplay = false;
-            this.wavesurfer.pause();
-        },
-    },
-    watch: {
-        song(newSong) {
-            document.getElementById(this.player_id + '_progressRange').value =
-                0;
-            this.loaded = 0;
-            this.ready = false;
-            this.wavesurfer.load(newSong.url);
-        },
-    },
-};
+/* ------------------------------------------------------------------ */
+/* 5.  Component methods (template‑used)                              */
+/* ------------------------------------------------------------------ */
+function changeTime(evt: Event) {
+    const target = evt.target as HTMLInputElement;
+    wavesurfer.value?.seekTo(+target.value / 100);
+}
+
+function pause() {
+    autoplay.value = false;
+    wavesurfer.value?.pause();
+}
+
+defineExpose({ pause });
+
+/* ------------------------------------------------------------------ */
+/* 6.  React to song prop changes                                     */
+/* ------------------------------------------------------------------ */
+watch(
+    () => props.song,
+    (next) => {
+        const progessSlider = document.getElementById(
+            player_id + '_progressRange'
+        ) as HTMLInputElement | null;
+        if (progessSlider) {
+            progessSlider.value = '0';
+        }
+        loaded.value = 0;
+        ready.value = false;
+        subtitles.value = parseSubtitles(next.transcript);
+        wavesurfer.value?.load(next.url);
+    }
+);
 </script>
 
 <style lang="scss">
@@ -246,6 +277,7 @@ wave {
 
 .playerError {
     border-color: red;
+
     .audio_subtitle {
         color: red;
         font-weight: bold;
@@ -272,6 +304,14 @@ wave {
 .mediaicon {
     width: 80%;
     height: auto;
+
+    &[variant='lightgrey'] {
+        color: lightgrey;
+    }
+
+    &[variant='primary'] {
+        color: $primary;
+    }
 }
 
 .play-pause-button {

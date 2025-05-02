@@ -5,7 +5,6 @@
         v-b-color-mode="isLightColor ? 'light' : 'dark'"
         class="navbarCustom"
         variant="primary"
-        sticky="top"
     >
         <b-navbar-brand to="/">
             <img
@@ -66,6 +65,14 @@ let title = computed(() => {
 //    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
 //}
 //
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000;
+}
+
 #logo {
     height: 40px;
     margin-right: 25px;
@@ -82,6 +89,7 @@ let title = computed(() => {
         //display: none;
     }
 }
+
 #sidebarButton {
     color: var(--bs-navbar-brand-color) !important;
 }

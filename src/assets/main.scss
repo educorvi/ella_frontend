@@ -5,7 +5,6 @@ $maxContentWidth: 900px;
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-vue-next/dist/bootstrap-vue-next.css';
 
-
 @function set-text-color($color) {
     @if (lightness( $color ) > 40) {
         @return black;
@@ -45,21 +44,24 @@ $border-radius-scroll: 0px;
 }
 
 body {
-    overscroll-behavior: none;
-
     padding: 0;
     margin: 0;
     max-width: 100%;
-    overflow-x: hidden;
 }
 
 
 .main{
     max-width: $maxContentWidth;
     width: 100%;
+    overflow-x: hidden;
     @extend .p-3;
+    margin-top: 40px;
     //padding: 8px 12px;
     //text-align: center;
+}
+
+.main img {
+    width: 100%;
 }
 
 #top {

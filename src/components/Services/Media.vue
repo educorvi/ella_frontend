@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="service.media">
         <div id="video-head" class="mb-3">
             <h2 class="mt-3">{{ service.title }}</h2>
             <!--      <b-checkbox>Untertitel anzeigen</b-checkbox>-->
@@ -8,24 +8,20 @@
         <span v-html="service.media?.textbefore" />
         <div v-if="service.media?.type === 'audio'">
             <div v-if="service.media?.playlist">
-                <playlist-player :songs="service.media.mediafiles" />
+                <playlist-player :songs="service.media.mediafiles || []" />
             </div>
             <div v-else>
-                <div
+                <single-file-audio-player
                     v-for="(song, index) in service.media.mediafiles"
-                    :key="index + '_' + song.name"
-                >
-                    <single-file-audio-player
-                        @play="pauseCurrent(index)"
-                        :song="song"
-                        :ref="'player' + index"
-                    ></single-file-audio-player>
-                </div>
+                    @play="pauseCurrent(index)"
+                    :song="song"
+                    ref="players"
+                ></single-file-audio-player>
             </div>
         </div>
         <video-player
             v-else-if="service.media.type === 'video'"
-            :videos="service.media.mediafiles"
+            :videos="service.media.mediafiles || []"
         />
         <b-alert variant="danger" v-else> Unbekannter Medientyp</b-alert>
         <span v-html="service.media.textafter" />
@@ -36,17 +32,21 @@
 import SingleFileAudioPlayer from '../AV-Components/SingleFileAudioPlayer.vue';
 import VideoPlayer from '../AV-Components/VideoPlayer.vue';
 import PlaylistPlayer from '../AV-Components/PlaylistPlayer.vue';
-import { ref, useTemplateRef } from 'vue';
+import { onMounted, ref, type ShallowRef, useTemplateRef } from 'vue';
 import type { ServiceDescription } from '@/api-client';
 
 const props = defineProps<{
     service: ServiceDescription;
 }>();
 
+const players = useTemplateRef<typeof SingleFileAudioPlayer>('players');
+
 const runningPlayer = ref<number | null>(null);
 const pauseCurrent = (newIndex: number) => {
+    console.log(players?.value?.[newIndex], newIndex, runningPlayer.value);
     if (runningPlayer.value !== null && runningPlayer.value !== newIndex) {
-        useTemplateRef('player' + runningPlayer.value).pause();
+        // @TODO does not work!
+        players?.value?.[newIndex].pause();
     }
     runningPlayer.value = newIndex;
 };
