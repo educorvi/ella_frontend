@@ -55,7 +55,7 @@ body {
     width: 100%;
     overflow-x: hidden;
     @extend .p-3;
-    margin-top: 40px;
+    @extend .pt-2;
     //padding: 8px 12px;
     //text-align: center;
 }

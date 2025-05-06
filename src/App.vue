@@ -1,7 +1,5 @@
 <template>
-    <header>
-        <ella-navbar />
-    </header>
+    <ella-navbar />
     <main class="p-2" id="content">
         <div class="main" v-if="store.data">
             <router-view />

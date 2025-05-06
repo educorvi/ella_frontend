@@ -10,7 +10,7 @@ const { sidebar, data } = storeToRefs(useApplicationStore());
 </script>
 
 <template>
-    <BOffcanvas v-model="sidebar" placement="end">
+    <BOffcanvas v-model="sidebar" placement="end" id="sidebar">
         <template #header>
             <div
                 style="
@@ -49,4 +49,8 @@ const { sidebar, data } = storeToRefs(useApplicationStore());
     </BOffcanvas>
 </template>
 
-<style scoped lang="scss"></style>
+<style lang="scss">
+#sidebar {
+    z-index: 20000;
+}
+</style>
