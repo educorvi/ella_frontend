@@ -43,10 +43,8 @@ const players = useTemplateRef<typeof SingleFileAudioPlayer>('players');
 
 const runningPlayer = ref<number | null>(null);
 const pauseCurrent = (newIndex: number) => {
-    console.log(players?.value?.[newIndex], newIndex, runningPlayer.value);
     if (runningPlayer.value !== null && runningPlayer.value !== newIndex) {
-        // @TODO does not work!
-        players?.value?.[newIndex].pause();
+        players?.value?.[runningPlayer.value].pause();
     }
     runningPlayer.value = newIndex;
 };

@@ -335,7 +335,7 @@ wave {
         1px 1px 1px #000000,
         0 0 1px #0d0d0d; /* Add cool effects to your sliders! */
     border: 1px solid #000000;
-    height: 70px;
+    height: 80px;
     width: 16px;
     @if ($enable-rounded) {
         border-radius: $border-radius;
@@ -348,6 +348,7 @@ wave {
 }
 
 input[type='range'] {
+    appearance: none;
     -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
     width: 100%; /* Specific width is required for Firefox. */
     background: transparent; /* Otherwise white in Chrome */
