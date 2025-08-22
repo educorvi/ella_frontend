@@ -20,7 +20,7 @@
     "theme:update": "node src/config/installTheme.mjs update"
   },
   "dependencies": {
-    "@educorvi/vue-json-form": "^3.0.0-beta.1",
+    "@educorvi/vue-json-form": "^3.0.0-beta.9",
     "@hey-api/client-axios": "^0.7.0",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",
