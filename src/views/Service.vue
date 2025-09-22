@@ -39,15 +39,17 @@ const service = computed(() => {
 
 const component = computed(() => {
     if (!service.value) {
-        return () => import('./notFound.vue');
+        return defineAsyncComponent(() => import('./notFound.vue'));
     }
     switch (service.value.type) {
         case 'page':
             return defineAsyncComponent(
                 () => import('../components/Services/Page.vue')
             );
-        // case 'service':
-        //     return () => import('../components/Services/Form.vue');
+        case 'service':
+            return defineAsyncComponent(
+                () => import('../components/Services/Form.vue')
+            );
         case 'media':
             return defineAsyncComponent(
                 () => import('../components/Services/Media.vue')

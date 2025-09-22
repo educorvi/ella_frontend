@@ -27,6 +27,8 @@ declare module 'vue' {
     CustomSpinner: typeof import('./src/components/CustomSpinner.vue')['default']
     EllaNavbar: typeof import('./src/components/nav/EllaNavbar.vue')['default']
     Form: typeof import('./src/components/Services/Form.vue')['default']
+    Form_old: typeof import('./src/components/Services/Form_old.vue')['default']
+    FormOld: typeof import('./src/components/Services/Form_old.vue')['default']
     IBiList: typeof import('~icons/bi/list')['default']
     IBiPauseCircle: typeof import('~icons/bi/pause-circle')['default']
     IBiPlayCircle: typeof import('~icons/bi/play-circle')['default']
